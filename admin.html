@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOD K8 • Admin Cloud</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{background:#080c14;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
+.panel{background:#111b2d;border:1px solid #26364d;border-radius:16px}
+input,select,textarea{background:#080f1d;border:1px solid #334155;border-radius:9px;padding:10px;color:#e2e8f0;width:100%}
+.btn{background:linear-gradient(90deg,#00c6ff,#0072ff);padding:10px 15px;border-radius:9px;font-weight:800;color:white}
+.btn-pink{background:linear-gradient(90deg,#ff007f,#7928ca);padding:10px 15px;border-radius:9px;font-weight:800;color:white}
+small{color:#94a3b8}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="p-4 md:p-6 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3">
+ <div><div class="text-cyan-400 text-xs font-black tracking-widest">MOD K8 • CLOUD CONTROL</div><h1 class="text-2xl font-black">Quản lý kho & sản phẩm</h1></div>
+ <div class="flex gap-2"><span id="who" class="text-sm text-slate-400 self-center">Chưa đăng nhập</span><button id="logout" class="btn hidden" onclick="logout()">Đăng xuất</button></div>
+</header>
+<main class="max-w-7xl mx-auto p-4 md:p-6 space-y-5">
+ <section id="config-warning" class="panel p-4 border-amber-700">
+  <b class="text-amber-300">Cần cấu hình Supabase trước khi sử dụng</b>
+  <p class="text-sm mt-1">Mở file admin.html, điền SUPABASE_URL và SUPABASE_ANON_KEY ở cuối file. Không dán service_role key vào trình duyệt.</p>
+ </section>
+ <section id="login-panel" class="panel p-5 max-w-lg mx-auto space-y-3">
+  <h2 class="text-lg font-black text-cyan-300">Đăng nhập Admin</h2>
+  <label class="block text-sm">Email quản trị<input id="email" type="email" autocomplete="username" placeholder="admin@example.com"></label>
+  <label class="block text-sm">Mật khẩu<input id="password" type="password" autocomplete="current-password"></label>
+  <button class="btn w-full" onclick="login()">ĐĂNG NHẬP</button>
+  <p id="login-msg" class="text-sm text-rose-300"></p>
+  <small>Tài khoản phải được tạo trong Supabase Auth và được cấp role admin trong bảng profiles.</small>
+ </section>
+ <section id="dashboard" class="hidden space-y-5">
+  <div class="grid md:grid-cols-3 gap-3">
+   <div class="panel p-4"><small>Tổng sản phẩm</small><div id="stat-products" class="text-3xl font-black text-cyan-300">0</div></div>
+   <div class="panel p-4"><small>ACC đang trong kho</small><div id="stat-acc" class="text-3xl font-black text-emerald-300">0</div></div>
+   <div class="panel p-4"><small>File / link đã tạo</small><div id="stat-digital" class="text-3xl font-black text-purple-300">0</div></div>
+  </div>
+  <nav class="flex flex-wrap gap-2">
+   <button class="btn" onclick="showTab('product')">Sản phẩm</button>
+   <button class="btn" onclick="showTab('acc')">Nhập kho ACC</button>
+   <button class="btn" onclick="showTab('file')">Upload FILE GAME</button>
+   <button class="btn" onclick="showTab('link')">Thêm LINK / TOOL</button>
+  </nav>
+  <section id="tab-product" class="panel p-5 space-y-3">
+   <div class="flex justify-between items-center"><h2 class="font-black text-xl">Danh sách sản phẩm</h2><button class="btn" onclick="loadAll()">Làm mới</button></div>
+   <div class="overflow-x-auto"><table class="w-full text-sm min-w-[650px]"><thead class="text-cyan-300"><tr><th class="p-2 text-left">Tên</th><th class="p-2">Loại</th><th class="p-2">Giá</th><th class="p-2">Trạng thái</th><th class="p-2">Tồn kho</th></tr></thead><tbody id="products"></tbody></table></div>
+  </section>
+  <section id="tab-acc" class="panel p-5 space-y-3 hidden">
+   <h2 class="font-black text-xl text-cyan-300">Nhập kho ACC game hàng loạt</h2>
+   <div class="rounded-xl border border-slate-700 p-3 space-y-2">
+    <b class="text-sm">Tạo mặt hàng ACC mới</b>
+    <div class="grid md:grid-cols-3 gap-2">
+     <input id="acc-new-name" placeholder="Tên mặt hàng ACC">
+     <input id="acc-new-price" type="number" min="0" value="10000" placeholder="Giá bán (VNĐ)">
+     <button class="btn" onclick="createAccProduct()">TẠO SẢN PHẨM ACC</button>
+    </div>
+    <p id="acc-product-msg" class="text-xs"></p>
+   </div>
+   <p class="text-sm text-slate-400">Mỗi dòng theo định dạng <code>tài_khoản|mật_khẩu</code>. Thông tin sẽ được lưu trong bảng riêng có RLS, không hiển thị công khai.</p>
+   <label class="block text-sm">Chọn sản phẩm ACC<select id="acc-product"></select></label>
+   <label class="block text-sm">Dán danh sách ACC<textarea id="acc-lines" rows="8" placeholder="acc_001|matkhau001&#10;acc_002|matkhau002"></textarea></label>
+   <div class="flex flex-wrap gap-2"><label class="btn cursor-pointer">Chọn file .txt<input id="acc-file" type="file" accept=".txt,text/plain" class="hidden" onchange="readAccFile(event)"></label><button class="btn-pink" onclick="importAcc()">NHẬP ACC VÀO CLOUD</button></div>
+   <p id="acc-msg" class="text-sm"></p>
+  </section>
+  <section id="tab-file" class="panel p-5 space-y-3 hidden">
+   <h2 class="font-black text-xl text-cyan-300">Upload file game lên Cloud</h2>
+   <div class="grid md:grid-cols-2 gap-3">
+    <label class="text-sm">Tên sản phẩm<input id="file-name" placeholder="Ví dụ: Bộ file cấu hình NRO"></label>
+    <label class="text-sm">Giá bán (VNĐ)<input id="file-price" type="number" min="0" value="10000"></label>
+    <label class="text-sm md:col-span-2">Mô tả<textarea id="file-desc" rows="2" placeholder="Mô tả phiên bản, yêu cầu hệ thống..."></textarea></label>
+    <label class="text-sm md:col-span-2">Chọn file<input id="game-file" type="file"></label>
+   </div>
+   <p class="text-xs text-amber-300">Bucket mặc định là private. Không dùng public URL để phát tán file trả phí.</p>
+   <button class="btn-pink" onclick="uploadGameFile()">UPLOAD & TẠO SẢN PHẨM</button><p id="file-msg" class="text-sm"></p>
+  </section>
+  <section id="tab-link" class="panel p-5 space-y-3 hidden">
+   <h2 class="font-black text-xl text-cyan-300">Thêm sản phẩm dạng link / tool</h2>
+   <div class="grid md:grid-cols-2 gap-3">
+    <label class="text-sm">Tên sản phẩm<input id="link-name" placeholder="Tên tool hoặc gói tài nguyên"></label>
+    <label class="text-sm">Giá bán (VNĐ)<input id="link-price" type="number" min="0" value="50000"></label>
+    <label class="text-sm md:col-span-2">URL tải / URL cấp quyền<input id="link-url" type="url" placeholder="https://..."></label>
+    <label class="text-sm md:col-span-2">Mô tả<textarea id="link-desc" rows="2"></textarea></label>
+   </div>
+   <p class="text-xs text-amber-300">Nếu link là bí mật hoặc dùng một lần, không nhập URL công khai lâu dài ở đây. Hãy dùng backend cấp link có thời hạn.</p>
+   <button class="btn-pink" onclick="addLinkProduct()">LƯU SẢN PHẨM LINK / TOOL</button><p id="link-msg" class="text-sm"></p>
+  </section>
+ </section>
+</main>
+<script>
+const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL";
+const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY";
+let sb = null, currentUser = null;
+if (SUPABASE_URL.startsWith("https://") && !SUPABASE_ANON_KEY.startsWith("PASTE_")) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  document.getElementById('config-warning').classList.add('hidden');
+}
+function msg(id,s,ok=false){const e=document.getElementById(id);e.textContent=s;e.className='text-sm '+(ok?'text-emerald-300':'text-rose-300');}
+async function login(){
+ if(!sb){msg('login-msg','Chưa cấu hình Supabase URL và anon key.');return;}
+ const {data,error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+ if(error){msg('login-msg',error.message);return;}
+ await checkAdmin(data.user);
+}
+async function checkAdmin(user){
+ const {data,error}=await sb.from('profiles').select('role,display_name').eq('id',user.id).single();
+ if(error||data?.role!=='admin'){await sb.auth.signOut();msg('login-msg','Tài khoản chưa được cấp quyền Admin.');return;}
+ currentUser=user;who.textContent='Admin: '+(data.display_name||user.email);logoutBtnShow(true);
+ document.getElementById('login-panel').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');
+ await loadAll();
+}
+function logoutBtnShow(v){document.getElementById('logout').classList.toggle('hidden',!v);}
+async function logout(){await sb.auth.signOut();location.reload();}
+function showTab(name){['product','acc','file','link'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden',x!==name));}
+function readAccFile(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.getElementById('acc-lines').value=r.result; r.readAsText(f);}
+async function loadAll(){
+ if(!sb)return;
+ const {data:ps,error}=await sb.from('products').select('id,name,product_type,price,status,storage_path,external_url').order('created_at',{ascending:false});
+ if(error){alert('Không tải được sản phẩm: '+error.message);return;}
+ const {data:as}=await sb.from('acc_inventory').select('id,status').eq('status','available');
+ const tbody=document.getElementById('products');
+ tbody.innerHTML=(ps||[]).map(p=>`<tr class="border-t border-slate-800"><td class="p-2">${esc(p.name)}</td><td class="p-2 text-center">${esc(p.product_type)}</td><td class="p-2 text-center">${Number(p.price).toLocaleString('vi-VN')}đ</td><td class="p-2 text-center">${esc(p.status)}</td><td class="p-2 text-center">${p.product_type==='acc'?(as||[]).length:(p.storage_path?'File Cloud':p.external_url?'Có link':'—')}</td></tr>`).join('')||'<tr><td colspan="5" class="p-4 text-center text-slate-500">Chưa có sản phẩm.</td></tr>';
+ document.getElementById('stat-products').textContent=(ps||[]).length;
+ document.getElementById('stat-acc').textContent=(as||[]).length;
+ document.getElementById('stat-digital').textContent=(ps||[]).filter(p=>p.product_type!=='acc').length;
+ const accs=(ps||[]).filter(p=>p.product_type==='acc');
+ document.getElementById('acc-product').innerHTML=accs.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')||'<option value="">Chưa có sản phẩm ACC — tạo ở SQL hoặc yêu cầu bổ sung form tạo sản phẩm</option>';
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function createAccProduct(){
+ const name=document.getElementById('acc-new-name').value.trim(),price=Number(document.getElementById('acc-new-price').value);
+ if(!name||!Number.isFinite(price)||price<0){msg('acc-product-msg','Nhập tên và giá hợp lệ.');return;}
+ const {error}=await sb.from('products').insert({name,description:'Tài khoản game; thông tin bàn giao sau khi đơn được thanh toán.',product_type:'acc',price,status:'available'});
+ if(error){msg('acc-product-msg','Tạo sản phẩm lỗi: '+error.message);return;}
+ document.getElementById('acc-new-name').value='';msg('acc-product-msg','Đã tạo mặt hàng ACC.',true);await loadAll();
+}
+async function importAcc(){
+ const pid=document.getElementById('acc-product').value, lines=document.getElementById('acc-lines').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ if(!pid){msg('acc-msg','Chưa chọn sản phẩm ACC.');return;}
+ const rows=[];
+ for(let i=0;i<lines.length;i++){const parts=lines[i].split('|');if(parts.length<2||!parts[0].trim()||!parts.slice(1).join('|').trim()){msg('acc-msg','Dòng '+(i+1)+' không đúng định dạng tài_khoản|mật_khẩu.');return;}rows.push({product_id:pid,username:parts[0].trim(),password:parts.slice(1).join('|').trim(),status:'available'});}
+ if(!rows.length){msg('acc-msg','Chưa có dữ liệu ACC.');return;}
+ const {error}=await sb.from('acc_inventory').insert(rows);
+ if(error){msg('acc-msg','Lỗi nhập kho: '+error.message);return;}
+ document.getElementById('acc-lines').value='';msg('acc-msg','Đã nhập '+rows.length+' ACC vào kho Cloud.',true);await loadAll();
+}
+async function uploadGameFile(){
+ const file=document.getElementById('game-file').files[0],name=document.getElementById('file-name').value.trim(),price=Number(document.getElementById('file-price').value),desc=document.getElementById('file-desc').value.trim();
+ if(!file||!name||!Number.isFinite(price)||price<0){msg('file-msg','Nhập tên, giá hợp lệ và chọn file.');return;}
+ if(file.size>500*1024*1024){msg('file-msg','File vượt giới hạn 500 MB của giao diện mẫu.');return;}
+ const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_'),path=`products/${crypto.randomUUID()}-${safe}`;
+ const up=await sb.storage.from('product-files').upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});
+ if(up.error){msg('file-msg','Upload lỗi: '+up.error.message);return;}
+ const ins=await sb.from('products').insert({name,description:desc,product_type:'file',price,status:'available',storage_path:path}).select().single();
+ if(ins.error){await sb.storage.from('product-files').remove([path]);msg('file-msg','Đã upload nhưng tạo sản phẩm lỗi: '+ins.error.message);return;}
+ msg('file-msg','Đã upload file lên bucket private và tạo sản phẩm.',true);document.getElementById('game-file').value='';await loadAll();
+}
+async function addLinkProduct(){
+ const name=document.getElementById('link-name').value.trim(),url=document.getElementById('link-url').value.trim(),price=Number(document.getElementById('link-price').value),desc=document.getElementById('link-desc').value.trim();
+ try{new URL(url)}catch(e){msg('link-msg','URL không hợp lệ.');return;}
+ if(!name||!Number.isFinite(price)||price<0){msg('link-msg','Nhập tên và giá hợp lệ.');return;}
+ const {error}=await sb.from('products').insert({name,description:desc,product_type:'link',price,status:'available',external_url:url});
+ if(error){msg('link-msg','Lưu lỗi: '+error.message);return;}
+ msg('link-msg','Đã lưu sản phẩm link/tool.',true);await loadAll();
+}
+(async()=>{if(sb){const {data}=await sb.auth.getSession();if(data.session)await checkAdmin(data.session.user);}})();
+</script>
+</body></html>

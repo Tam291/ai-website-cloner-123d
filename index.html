@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOD K8 - BẢNG ĐIỀU KHIỂN HỖ TRỢ NGỌC RỒNG ONLINE</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyberDark: '#080c14',
+                        cyberPanel: '#0f172a',
+                        cyberCard: '#131c31',
+                        cyberBorder: '#1e293b',
+                        cyberCyan: '#00f2fe',
+                        cyberPink: '#ff007f',
+                        cyberGreen: '#00e676',
+                        cyberGold: '#ffcc00'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c14;
+            background-image: 
+                linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #e2e8f0;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080c14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+
+        /* Glow & Effects */
+        .glow-cyan {
+            text-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+        }
+        .glow-pink {
+            text-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+        }
+        .glow-gold {
+            text-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+        }
+        .border-glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            border-color: #00f2fe;
+        }
+        
+        /* Neon Buttons */
+        .btn-pink-gradient {
+            background: linear-gradient(90deg, #ff007f 0%, #7928ca 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-pink-gradient:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .btn-cyan-gradient {
+            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-cyan-gradient:hover {
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Card Hover */
+        .card-cyber {
+            background: rgba(19, 28, 49, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-cyber:hover {
+            border-color: rgba(0, 242, 254, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ticker Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: 200%;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        @media (max-width: 767px) {
+            #sidebar { position: fixed; inset: 0 auto 0 0; width: min(82vw, 300px); height: 100dvh; transform: translateX(-105%); box-shadow: 20px 0 50px rgba(0,0,0,.55); }
+            #sidebar.mobile-open { transform: translateX(0); }
+            #sidebar-backdrop { display:none; position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.65); }
+            #sidebar-backdrop.show { display:block; }
+            .main-content-padding { padding: 1rem !important; }
+        }
+        /* Active Nav Link */
+        .nav-active {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 242, 254, 0.02) 100%);
+            border-left: 4px solid #00f2fe;
+            color: #00f2fe !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <div class="flex flex-1 min-h-screen relative">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="w-64 bg-cyberPanel border-r border-slate-800 flex flex-col justify-between shrink-0 transition-all duration-300 z-30">
+            <div>
+                <!-- Brand Header -->
+                <div class="p-5 border-b border-slate-800/80 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid me-1 fa-cubes text-cyan-400 text-2xl"></i>
+                        <span class="text-xl font-extrabold tracking-wider text-white">MOD K8 <span class="text-xs text-cyan-400 font-mono block -mt-1">NRO EDITION</span></span>
+                    </div>
+                </div>
+
+                <!-- User Profile Box -->
+                <div class="m-4 p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">
+                        TA
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                        <div class="font-bold text-slate-100 truncate">Tam8304</div>
+                        <div class="text-xs text-slate-400 flex items-center mt-1">
+                            <span>Số dư:</span>
+                            <span class="text-yellow-400 font-bold ml-1 glow-gold" id="user-balance">0đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="mt-2 space-y-1 px-3">
+                    <button onclick="switchTab('trangchu')" id="nav-trangchu" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition nav-active">
+                        <i class="fa-solid fa-house w-5 text-center"></i>
+                        <span>Trang chủ</span>
+                    </button>
+
+                    <button onclick="switchTab('checkband')" id="nav-checkband" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-magnifying-glass w-5 text-center"></i>
+                        <span>CHECK BAND ACC NRO</span>
+                    </button>
+
+                    <button onclick="switchTab('accgiare')" id="nav-accgiare" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-sack-dollar w-5 text-center text-yellow-400"></i>
+                        <span>Tài Khoản Giá Rẻ</span>
+                    </button>
+
+                    <button onclick="switchTab('upde')" id="nav-upde" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-rocket w-5 text-center text-cyan-400"></i>
+                        <span>Cải Thiện Sức Mạnh / Úp Đệ</span>
+                    </button>
+
+                    <button onclick="switchTab('tienich')" id="nav-tienich" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-screwdriver-wrench w-5 text-center"></i>
+                        <span>Ứng dụng tiện ích</span>
+                    </button>
+
+                    <button onclick="switchTab('lichsu')" id="nav-lichsu" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+                        <span>Lịch sử mua Key</span>
+                    </button>
+
+                    <button onclick="switchTab('naptien')" id="nav-naptien" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-credit-card w-5 text-center text-emerald-400"></i>
+                        <span>Nạp tiền tự động</span>
+                    </button>
+                    <button onclick="switchTab('sanpham')" id="nav-sanpham" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-store w-5 text-center"></i><span>Chợ acc / file / tool</span>
+                    </button>
+                    <button onclick="switchTab('donhang')" id="nav-donhang" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-receipt w-5 text-center"></i><span>Đơn hàng</span>
+                    </button>
+                    <button onclick="switchTab('hoso')" id="nav-hoso" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-user w-5 text-center"></i><span>Hồ sơ khách hàng</span>
+                    </button>
+                    <button onclick="switchTab('chinhsach')" id="nav-chinhsach" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-slate-300 hover:text-cyan-400 transition">
+                        <i class="fa-solid fa-shield-halved w-5 text-center"></i><span>Chính sách & điều khoản</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer Info -->
+            <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 text-center">
+                MOD K8 Cyber Engine v4.2<br>Hệ thống Mod Ngọc Rồng 24/7
+            </div>
+        </aside>
+        <div id="sidebar-backdrop" onclick="toggleMobileMenu(false)"></div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col min-w-0 bg-cyberDark/90">
+            
+            <!-- TOP BAR STATS TICKER -->
+            <header class="bg-slate-900/80 border-b border-slate-800 px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-4 backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden rounded-lg border border-cyan-800 px-3 py-2 text-cyan-300" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
+                    <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="text-cyan-400">nrodtchill.com</span>
+                    <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+                    </div>
+                </div>
+
+                <div class="flex items-center flex-wrap gap-4 text-xs font-medium">
+                    <div class="flex items-center space-x-1.5 text-slate-300">
+                        <i class="fa-solid fa-bolt text-yellow-400"></i>
+                        <span class="text-yellow-400 font-bold">DỮ LIỆU MẪU</span>
+                        <span>acc đã úp SM</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5 text-slate-300">
+                        <i class="fa-solid fa-cart-shopping text-cyan-400"></i>
+                        <span class="text-cyan-400 font-bold">CHƯA KẾT NỐI</span>
+                        <span>acc đã giao</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5 text-emerald-400">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Acc check sống lúc giao</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5 text-rose-400">
+                        <i class="fa-solid fa-burst"></i>
+                        <span>Lỗi / thiếu hàng tự hoàn tiền</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5 text-amber-400">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        <span>Nạp tiền tự động 24/7</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- DYNAMIC VIEWS CONTAINER -->
+            <div class="flex-1 p-6 overflow-y-auto main-content-padding">
+
+                <!-- TAB 1: TRANG CHỦ / DỊCH VỤ TOOL -->
+                <div id="tab-trangchu" class="tab-content space-y-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h1 class="text-2xl font-black tracking-wide text-white flex items-center">
+                            <span class="w-2 h-6 bg-cyan-400 rounded-full mr-3"></span>
+                            DỊCH VỤ MOD & TOOL NGỌC RỒNG ONLINE
+                        </h1>
+                        <span class="text-xs bg-cyan-950 text-cyan-400 px-3 py-1.5 rounded-full border border-cyan-800">
+                            Phiên bản Auto NRO v230 Antiband
+                        </span>
+                    </div>
+
+                    <!-- Grid of Tool Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        
+                        <!-- Tool Card 1 -->
+                        <div class="card-cyber rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div class="text-[10px] uppercase tracking-wider font-extrabold text-cyan-400 mb-1">NGỌC RỒNG ONLINE</div>
+                                        <h3 class="text-lg font-black text-white leading-tight">BYPASS NGỌC RỒNG</h3>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-[10px] font-bold px-2 py-1 rounded">64BIT</span>
+                                </div>
+                                <p class="text-xs text-yellow-400 font-medium mb-3">DÙNG CHO GIẢ LẬP BẢN 64 — VIỆT NAM / KHÔNG MẮC KẸT TỰ ĐỘNG</p>
+                                
+                                <div class="bg-amber-950/40 border border-amber-800/50 text-amber-300 text-xs px-3 py-1.5 rounded-lg mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-fire text-amber-400"></i>
+                                    <span>Đã bán <strong class="text-amber-200">122 key</strong> — đơn gần nhất 11 giờ trước</span>
+                                </div>
+
+                                <ul class="text-xs text-slate-300 space-y-2 mb-4">
+                                    <li class="flex items-start"><i class="fa-solid fa-display text-cyan-400 mt-0.5 mr-2"></i><span><strong>Bypass Giả Lập:</strong> Chơi mượt trên LDPlayer, Bluestacks, MuMu...</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-crosshairs text-red-400 mt-0.5 mr-2"></i><span><strong>Auto Tự Đánh & Búp Đệ:</strong> Hỗ trợ giữ map không bị văng</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-shield-halved text-emerald-400 mt-0.5 mr-2"></i><span><strong>Không Bị Trận Đấu Ảo:</strong> Login mượt không bị văng acc</span></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div class="bg-emerald-950/40 border border-emerald-800/60 p-2.5 rounded-xl text-center mb-4">
+                                    <span class="text-xs font-bold text-emerald-400 block"><i class="fa-solid fa-check-double mr-1"></i> BẢN GAME GỐC ANTIBAND 100%</span>
+                                    <span class="text-[10px] text-slate-400 block">Không can thiệp logic game đảm bảo an toàn</span>
+                                </div>
+                                <button onclick="showBuyModal('BYPASS NGỌC RỒNG 64BIT', '50.000đ/Tháng')" class="w-full btn-pink-gradient text-white text-xs font-extrabold py-3 rounded-xl uppercase tracking-wider">
+                                    <i class="fa-solid fa-key mr-1"></i> Mua Key Kích Hoạt
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tool Card 2 -->
+                        <div class="card-cyber rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div class="text-[10px] uppercase tracking-wider font-extrabold text-cyan-400 mb-1">NGỌC RỒNG ONLINE</div>
+                                        <h3 class="text-lg font-black text-white leading-tight">BYPASS NRO 32BIT</h3>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-cyan-600 to-teal-500 text-white text-[10px] font-bold px-2 py-1 rounded">NHIỀU TAB</span>
+                                </div>
+                                <p class="text-xs text-yellow-400 font-medium mb-3">BẢN 32 — VIỆT NAM NHIỀU TAB — NHẸ MÁY TREO VIP</p>
+                                
+                                <div class="bg-amber-950/40 border border-amber-800/50 text-amber-300 text-xs px-3 py-1.5 rounded-lg mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-fire text-amber-400"></i>
+                                    <span>Đã bán <strong class="text-amber-200">89 key</strong> — đơn gần nhất 8 ngày trước</span>
+                                </div>
+
+                                <ul class="text-xs text-slate-300 space-y-2 mb-4">
+                                    <li class="flex items-start"><i class="fa-solid fa-window-restore text-cyan-400 mt-0.5 mr-2"></i><span><strong>Multi-Tab NRO:</strong> Chạy 20-50 acc cùng lúc không giật lag</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-coins text-yellow-400 mt-0.5 mr-2"></i><span><strong>Auto Nhặt Vàng / Bó Kiếp:</strong> Tự động hồi máu, nhặt đồ VIP</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-robot text-purple-400 mt-0.5 mr-2"></i><span><strong>Chơi Cơ Cấu Tự Động:</strong> Vào Doanh Trại & Ngũ Hành Sơn</span></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div class="bg-emerald-950/40 border border-emerald-800/60 p-2.5 rounded-xl text-center mb-4">
+                                    <span class="text-xs font-bold text-emerald-400 block"><i class="fa-solid fa-shield-heart mr-1"></i> ANTIBAND AN TOÀN 100%</span>
+                                    <span class="text-[10px] text-slate-400 block">Tự động xả ram cho máy yếu</span>
+                                </div>
+                                <button onclick="showBuyModal('BYPASS NRO 32BIT MULTI-TAB', '40.000đ/Tháng')" class="w-full btn-pink-gradient text-white text-xs font-extrabold py-3 rounded-xl uppercase tracking-wider">
+                                    <i class="fa-solid fa-key mr-1"></i> Mua Key Kích Hoạt
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tool Card 3 -->
+                        <div class="card-cyber rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div class="text-[10px] uppercase tracking-wider font-extrabold text-cyan-400 mb-1">BOX PHONE NRO</div>
+                                        <h3 class="text-lg font-black text-white leading-tight">REG Nick & Box Phone</h3>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-red-600 to-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded">VIP BOX</span>
+                                </div>
+                                <p class="text-xs text-slate-400 font-medium mb-3">Treo máy cày vàng/ngọc trên Box Phone Android 5 - 13</p>
+                                
+                                <div class="bg-amber-950/40 border border-amber-800/50 text-amber-300 text-xs px-3 py-1.5 rounded-lg mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-fire text-amber-400"></i>
+                                    <span>Đã bán <strong class="text-amber-200">136 key</strong> — đơn gần nhất 2 ngày trước</span>
+                                </div>
+
+                                <ul class="text-xs text-slate-300 space-y-2 mb-4">
+                                    <li class="flex items-start"><i class="fa-solid fa-mobile-screen-button text-red-400 mt-0.5 mr-2"></i><span><strong>Phù hợp:</strong> Reg Acc NRO • Úp Sức Mạnh • Treo Đệ Tử</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-gears text-cyan-400 mt-0.5 mr-2"></i><span><strong>Tối ưu Box Phone:</strong> Chạy trên Android 5.0 -> 13</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-infinity text-emerald-400 mt-0.5 mr-2"></i><span><strong>Tự động re-login:</strong> Khi đứt mạng tự động kết nối lại</span></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <button onclick="showBuyModal('TOOL REG ACC & BOX PHONE NRO', '100.000đ/Tháng')" class="w-full btn-pink-gradient text-white text-xs font-extrabold py-3 rounded-xl uppercase tracking-wider">
+                                    <i class="fa-solid fa-key mr-1"></i> Mua Key Kích Hoạt
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tool Card 4 -->
+                        <div class="card-cyber rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div class="text-[10px] uppercase tracking-wider font-extrabold text-cyan-400 mb-1">AUTO FARM NRO</div>
+                                        <h3 class="text-lg font-black text-white leading-tight">Buff Sức Mạnh & Đệ Tử</h3>
+                                    </div>
+                                    <span class="bg-gradient-to-r from-emerald-600 to-green-500 text-white text-[10px] font-bold px-2 py-1 rounded">AUTO FARM</span>
+                                </div>
+                                <p class="text-xs text-slate-400 font-medium mb-3">Úp sức mạnh đệ tử siêu tốc, buff đậu thần tự động 24/7</p>
+                                
+                                <div class="bg-amber-950/40 border border-amber-800/50 text-amber-300 text-xs px-3 py-1.5 rounded-lg mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-fire text-amber-400"></i>
+                                    <span>Đã bán <strong class="text-amber-200">3 key</strong> — đơn gần nhất 11 giờ trước</span>
+                                </div>
+
+                                <ul class="text-xs text-slate-300 space-y-2 mb-4">
+                                    <li class="flex items-start"><i class="fa-solid fa-dumbbell text-emerald-400 mt-0.5 mr-2"></i><span><strong>Tính năng:</strong> Úp Đệ Kiệm Tỉ • Úp Bí Kiếp • Mua Đậu Tự Động</span></li>
+                                    <li class="flex items-start"><i class="fa-solid fa-bolt text-yellow-400 mt-0.5 mr-2"></i><span><strong>Tốc độ:</strong> Tăng 200% tốc độ đánh đệ tử</span></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <button onclick="showBuyModal('BUFF SỨC MẠNH & ĐỆ TỬ NRO', '60.000đ/Tháng')" class="w-full btn-pink-gradient text-white text-xs font-extrabold py-3 rounded-xl uppercase tracking-wider">
+                                    <i class="fa-solid fa-key mr-1"></i> Mua Key Kích Hoạt
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 2: CHECK BAND ACC NGỌC RỒNG -->
+                <div id="tab-checkband" class="tab-content hidden space-y-6">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-magnifying-glass text-cyan-400 text-3xl"></i>
+                        <div>
+                            <h1 class="text-2xl font-black text-cyan-400 glow-cyan tracking-wider">CHECK BAND ACC NGỌC RỒNG</h1>
+                            <p class="text-xs text-slate-400">Bản giao diện mô phỏng. Chưa kết nối API chính thức để xác minh trạng thái tài khoản; không nhập mật khẩu thật hoặc danh sách tài khoản của người khác.</p>
+                        </div>
+                    </div>
+
+                    <!-- VIP Ticket Banner -->
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-slate-200">Tính năng CHECK BAND: <span class="text-yellow-400">30,000đ / ngày</span> (không giới hạn số acc)</div>
+                                <div class="text-xs text-slate-400">Mua 1 lần dùng <strong class="text-white">không giới hạn trong 24 giờ</strong>. Số dư hiện tại: <strong class="text-yellow-400">0đ</strong></div>
+                            </div>
+                        </div>
+                        <button onclick="switchTab('naptien')" class="btn-pink-gradient px-5 py-2.5 rounded-xl text-xs font-extrabold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-ticket"></i>
+                            <span>MUA VÉ 30,000Đ/NGÀY</span>
+                        </button>
+                    </div>
+
+                    <!-- Input Box Area -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <h3 class="font-bold text-sm text-slate-200">1. Nạp danh sách tài khoản Ngọc Rồng</h3>
+                        
+                        <textarea id="checkband-input" rows="7" placeholder="Mỗi dòng 1 acc, ví dụ:&#10;nro_super_user1|MatKhau123&#10;nro_pro_999|987654321&#10;cuongnro2026|12345678" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs font-mono text-cyan-300 focus:border-cyan-500 focus:outline-none placeholder-slate-600"></textarea>
+
+                        <div class="flex items-center space-x-3">
+                            <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 flex items-center space-x-2 transition">
+                                <i class="fa-solid fa-folder-open text-cyan-400"></i>
+                                <span>Chọn file .txt</span>
+                                <input type="file" id="file-input" accept=".txt" class="hidden" onchange="handleFileUpload(event)">
+                            </label>
+
+                            <button onclick="startCheckBand()" class="btn-cyan-gradient text-white text-xs font-black px-6 py-2.5 rounded-xl flex items-center space-x-2 uppercase tracking-wider">
+                                <i class="fa-solid fa-play"></i>
+                                <span>BẮT ĐẦU CHECK BAND</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Check Results -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Acc Song -->
+                        <div class="bg-slate-900/80 border border-emerald-900/40 rounded-2xl p-4">
+                            <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                                <span class="text-emerald-400 font-bold text-sm flex items-center"><i class="fa-solid fa-circle-check mr-2"></i> Acc Sống</span>
+                                <span id="count-song" class="bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">0</span>
+                            </div>
+                            <div id="box-song" class="h-48 overflow-y-auto font-mono text-xs text-emerald-300 space-y-1 p-2 bg-slate-950/60 rounded-xl">
+                                <div class="text-slate-600 italic">Chưa có dữ liệu...</div>
+                            </div>
+                        </div>
+
+                        <!-- Acc Band -->
+                        <div class="bg-slate-900/80 border border-rose-900/40 rounded-2xl p-4">
+                            <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                                <span class="text-rose-400 font-bold text-sm flex items-center"><i class="fa-solid fa-circle-minus mr-2"></i> Acc Band / Sai Pass</span>
+                                <span id="count-band" class="bg-rose-950 text-rose-400 border border-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full">0</span>
+                            </div>
+                            <div id="box-band" class="h-48 overflow-y-auto font-mono text-xs text-rose-300 space-y-1 p-2 bg-slate-950/60 rounded-xl">
+                                <div class="text-slate-600 italic">Chưa có dữ liệu...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: TÀI KHOẢN NGỌC RỒNG GIÁ RẺ -->
+                <div id="tab-accgiare" class="tab-content hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-black text-yellow-400 glow-gold flex items-center">
+                                <i class="fa-solid fa-sack-dollar mr-3"></i> TÀI KHOẢN NGỌC RỒNG GIÁ RẺ
+                            </h1>
+                            <p class="text-xs text-slate-400 mt-1">Chọn loại acc, nhập số lượng → hệ thống trừ số dư và <strong class="text-cyan-400">giao acc ngay</strong>. Số dư: <span class="text-yellow-400 font-bold">0đ</span> <a href="#" onclick="switchTab('naptien')" class="text-cyan-400 underline ml-2">+ Nạp tiền</a></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        
+                        <!-- Account Card 1 -->
+                        <div class="card-cyber rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-amber-400 mb-2">ACC LOSS Kích Bot NRO</h3>
+                                <div class="bg-emerald-950/40 border border-emerald-800/50 text-emerald-400 text-[11px] px-2.5 py-1 rounded-lg mb-3 inline-block font-semibold">
+                                    <i class="fa-solid fa-check mr-1"></i> Đảm bảo acc SỐNG lúc giao
+                                </div>
+                                <p class="text-xs text-slate-400 mb-4">Acc đã kích sẵn game loss, chỉ cần đăng nhập vào ghép trận là gặp bot úp sức mạnh nhanh chóng.</p>
+
+                                <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">GIÁ / ACC</span>
+                                        <span class="text-yellow-400 font-black text-sm">400đ</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">CÒN LẠI</span>
+                                        <span class="text-cyan-400 font-black text-sm">868 acc</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <label class="text-xs text-slate-400 font-bold">Số lượng</label>
+                                    <input type="number" value="1" min="1" id="qty-acc-1" oninput="updateAccPrice('qty-acc-1', 400, 'total-acc-1')" class="w-20 bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-white font-bold">
+                                    <span class="text-xs text-slate-400">= <strong id="total-acc-1" class="text-yellow-400">400đ</strong></span>
+                                </div>
+                            </div>
+
+                            <button onclick="buyAcc('ACC LOSS Kích Bot NRO', 'qty-acc-1', 400)" class="w-full btn-pink-gradient text-white text-xs font-black py-3 rounded-xl flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>MUA NGAY</span>
+                            </button>
+                        </div>
+
+                        <!-- Account Card 2 -->
+                        <div class="card-cyber rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-amber-400 mb-2">ACC MXT NRO</h3>
+                                <p class="text-xs text-slate-400 mb-4">Acc mới tạo, chưa tạo nhân vật, dùng reg Nick clone cày vàng.</p>
+
+                                <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">GIÁ / ACC</span>
+                                        <span class="text-yellow-400 font-black text-sm">20đ</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">CÒN LẠI</span>
+                                        <span class="text-cyan-400 font-black text-sm">34019 acc</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <label class="text-xs text-slate-400 font-bold">Số lượng</label>
+                                    <input type="number" value="1" min="1" id="qty-acc-2" oninput="updateAccPrice('qty-acc-2', 20, 'total-acc-2')" class="w-20 bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-white font-bold">
+                                    <span class="text-xs text-slate-400">= <strong id="total-acc-2" class="text-yellow-400">20đ</strong></span>
+                                </div>
+                            </div>
+
+                            <button onclick="buyAcc('ACC MXT NRO', 'qty-acc-2', 20)" class="w-full btn-pink-gradient text-white text-xs font-black py-3 rounded-xl flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>MUA NGAY</span>
+                            </button>
+                        </div>
+
+                        <!-- Account Card 3 -->
+                        <div class="card-cyber rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-amber-400 mb-2">ACC LV 12 MXT (KHÔNG BAO BAND)</h3>
+                                <div class="bg-emerald-950/40 border border-emerald-800/50 text-emerald-400 text-[11px] px-2.5 py-1 rounded-lg mb-3 inline-block font-semibold">
+                                    <i class="fa-solid fa-check mr-1"></i> Đảm bảo acc SỐNG lúc giao
+                                </div>
+                                <p class="text-xs text-slate-400 mb-4">Acc ngâm càng lâu giá càng cao (ngâm = chưa đăng nhập vào game kể từ ngày up). Check acc lúc giao.</p>
+
+                                <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">GIÁ / ACC</span>
+                                        <span class="text-yellow-400 font-black text-sm">100đ - 800đ</span>
+                                    </div>
+                                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                        <span class="text-slate-500 block text-[10px]">CÒN LẠI</span>
+                                        <span class="text-cyan-400 font-black text-sm">2229 acc</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="text-xs text-slate-400 font-bold block mb-1">Ngày ngâm</label>
+                                    <select class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
+                                        <option>Acc ngâm 11-19 ngày — 100đ</option>
+                                        <option>Acc ngâm 20-30 ngày — 250đ</option>
+                                        <option>Acc ngâm trên 30 ngày — 500đ</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <label class="text-xs text-slate-400 font-bold">Số lượng</label>
+                                    <input type="number" value="1" min="1" id="qty-acc-3" oninput="updateAccPrice('qty-acc-3', 100, 'total-acc-3')" class="w-20 bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-white font-bold">
+                                    <span class="text-xs text-slate-400">= <strong id="total-acc-3" class="text-yellow-400">100đ</strong></span>
+                                </div>
+                            </div>
+
+                            <button onclick="buyAcc('ACC LV 12 MXT NRO', 'qty-acc-3', 100)" class="w-full btn-pink-gradient text-white text-xs font-black py-3 rounded-xl flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>MUA NGAY</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 4: CẢI THIỆN SỨC MẠNH / ÚP ĐỆ SIÊU TỐC -->
+                <div id="tab-upde" class="tab-content hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h1 class="text-2xl font-black text-white tracking-wide flex items-center">
+                            <span class="w-2 h-6 bg-cyan-400 rounded-full mr-3"></span>
+                            CẢI THIỆN SỨC MẠNH & ÚP ĐỆ SIÊU TỐC
+                        </h1>
+                        <span class="text-xs text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-3 py-1 rounded-full font-bold">
+                            MODK8.TOP VIP ENGINE
+                        </span>
+                    </div>
+
+                    <!-- Server Queue Info -->
+                    <div class="flex items-center space-x-4 text-xs font-semibold">
+                        <span class="text-yellow-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-2 text-yellow-400"></i> Máy cày đang nghỉ — đơn vẫn được xếp hàng</span>
+                        <span class="text-slate-400"><i class="fa-solid fa-folder mr-1"></i> Đơn của bạn: <strong class="text-white">0/5 đơn chưa xong</strong></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <!-- Order Form -->
+                        <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+                            <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2">ĐẶT ĐƠN ÚP SỨC MẠNH</h3>
+
+                            <div>
+                                <label class="text-xs text-slate-300 font-bold block mb-1">Tài khoản game (Ngọc Rồng / Garena)</label>
+                                <input type="text" placeholder="tên đăng nhập — hoặc dán tài khoản|mật khẩu" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-cyan-300 focus:outline-none focus:border-cyan-500">
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-300 font-bold block mb-1">Mật khẩu</label>
+                                <input type="password" placeholder="mật khẩu acc" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-cyan-300 focus:outline-none focus:border-cyan-500">
+                                <p class="text-[10px] text-slate-500 mt-1">Không đăng nhập acc trong lúc máy đang cày (sẽ bị đá phiên). Mật khẩu được xoá khỏi hệ thống ngay khi đơn kết thúc.</p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs text-slate-300 font-bold block mb-1">Sức mạnh hiện tại</label>
+                                    <select id="sm-current" onchange="calculateUpDePrice()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
+                                        <option value="1">1.5 Tỷ SM</option>
+                                        <option value="2">15 Tỷ SM</option>
+                                        <option value="3">40 Tỷ SM</option>
+                                        <option value="4">80 Tỷ SM (Đã có đệ)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-300 font-bold block mb-1">Mục tiêu sức mạnh</label>
+                                    <select id="sm-target" onchange="calculateUpDePrice()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
+                                        <option value="1">15 Tỷ SM</option>
+                                        <option value="2">40 Tỷ SM</option>
+                                        <option value="3">80 Tỷ SM</option>
+                                        <option value="4" selected>120 Tỷ SM (Thách Đấu NRO)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-xl space-y-2 text-xs text-slate-400">
+                                <div class="font-bold text-slate-200 mb-1">Quy định:</div>
+                                <p>• Đơn <strong class="text-yellow-400">đang chờ</strong> (chưa máy nào nhận) có thể huỷ, <strong class="text-emerald-400">hoàn 100%</strong>.</p>
+                                <p>• Đơn <strong class="text-rose-400">đã bắt đầu chạy</strong> thì không huỷ được.</p>
+                                <p>• Phải ghi <strong class="text-cyan-400">CHÍNH XÁC</strong> sức mạnh và điểm hiện tại. Ghi sai lệch quá 30 tỷ → huỷ đơn, không hoàn tiền.</p>
+                            </div>
+
+                            <button onclick="submitOrder()" class="w-full btn-pink-gradient text-white text-xs font-black py-3 rounded-xl uppercase tracking-wider">
+                                <i class="fa-solid fa-paper-plane mr-2"></i> TẠO ĐƠN CÀY NGAY
+                            </button>
+                        </div>
+
+                        <!-- Pricing Breakdown -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6">
+                                <h3 class="text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-3">BÁO GIÁ DỊCH VỤ</h3>
+                                
+                                <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-5 text-center mb-5">
+                                    <div class="text-xs text-slate-400 mb-1">Combo 1.5 Tỷ → 120 Tỷ SM</div>
+                                    <div id="calculated-price" class="text-3xl font-black text-yellow-400 glow-gold my-1">250.000đ</div>
+                                    <div class="text-xs text-slate-500 line-through">305.000đ</div>
+                                    <span class="inline-block mt-2 bg-emerald-950 text-emerald-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-800">Tiết kiệm 55.000đ</span>
+                                </div>
+
+                                <div class="space-y-2 text-xs">
+                                    <div class="font-bold text-slate-200 mb-2">BẢNG GIÁ LẺ:</div>
+                                    <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                                        <span class="text-slate-400">1.5 Tỷ → 15 Tỷ SM</span>
+                                        <span class="text-yellow-400 font-bold">25.000đ</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                                        <span class="text-slate-400">15 Tỷ → 40 Tỷ SM</span>
+                                        <span class="text-yellow-400 font-bold">35.000đ</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                                        <span class="text-slate-400">40 Tỷ → 80 Tỷ SM</span>
+                                        <span class="text-yellow-400 font-bold">40.000đ</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                                        <span class="text-slate-400">80 Tỷ → 120 Tỷ SM</span>
+                                        <span class="text-yellow-400 font-bold">50.000đ</span>
+                                    </div>
+                                    <div class="flex justify-between pt-2">
+                                        <span class="text-cyan-400 font-bold">★ Combo 1.5 Tỷ → 120 Tỷ</span>
+                                        <span class="text-yellow-400 font-black">250.000đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 5: LỊCH SỬ MUA KEY -->
+                <div id="tab-lichsu" class="tab-content hidden space-y-6">
+                    <h1 class="text-2xl font-black text-cyan-400 glow-cyan flex items-center">
+                        <i class="fa-solid fa-clock-rotate-left mr-3"></i> LỊCH SỬ TÀI KHOẢN / MUA KEY
+                    </h1>
+
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-950 text-cyan-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                                        <th class="p-4 font-extrabold">THỜI GIAN</th>
+                                        <th class="p-4 font-extrabold">GÓI TOOL</th>
+                                        <th class="p-4 font-extrabold">MÃ KEY KÍCH HOẠT</th>
+                                        <th class="p-4 font-extrabold">ĐÃ THANH TOÁN</th>
+                                        <th class="p-4 font-extrabold">TẢI GAME</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-slate-300 divide-y divide-slate-800/60">
+                                    <tr>
+                                        <td colspan="5" class="p-12 text-center text-slate-500 font-medium">
+                                            <i class="fa-solid fa-box-open text-3xl mb-2 block"></i>
+                                            Bạn chưa có lịch sử mua hàng nào!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: NẠP TIỀN TỰ ĐỘNG -->
+                <div id="tab-naptien" class="tab-content hidden space-y-6">
+                    <h1 class="text-2xl font-black text-emerald-400 flex items-center">
+                        <i class="fa-solid fa-wallet mr-3"></i> NẠP TIỀN TỰ ĐỘNG 24/7
+                    </h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- ATM Banking QR Code -->
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+                            <h3 class="font-extrabold text-sm text-cyan-400 uppercase tracking-wider flex items-center">
+                                <i class="fa-solid fa-qrcode mr-2 text-lg"></i> CHUYỂN KHOẢN NGÂN HÀNG (MB BANK)
+                            </h3>
+
+                            <div class="bg-white p-4 rounded-xl flex items-center justify-center max-w-[220px] mx-auto border-4 border-cyan-500">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MODK8%20Tam8304%20NapTien" alt="QR Code Bank" class="w-full">
+                            </div>
+
+                            <div class="space-y-2 text-xs">
+                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                    <span class="text-slate-400">Ngân hàng:</span>
+                                    <strong class="text-white font-bold">MB BANK (Quân Đội)</strong>
+                                </div>
+                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                    <span class="text-slate-400">Số tài khoản:</span>
+                                    <strong class="text-yellow-400 font-mono text-sm font-bold">0911756001</strong>
+                                </div>
+                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                    <span class="text-slate-400">Chủ tài khoản:</span>
+                                    <strong class="text-white font-bold">NGUYEN VAN MODK8</strong>
+                                </div>
+                                <div class="bg-slate-950 p-3 rounded-xl border border-cyan-800 flex justify-between items-center">
+                                    <span class="text-slate-400">Nội dung CK:</span>
+                                    <strong class="text-cyan-400 font-mono font-bold bg-cyan-950 px-2 py-1 rounded">NAPTIEU Tam8304</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+                            <h3 class="font-extrabold text-sm text-yellow-400 uppercase tracking-wider">LƯU Ý NẠP TIỀN</h3>
+                            <ul class="text-xs text-slate-300 space-y-3 list-disc pl-4">
+                                <li>Nạp tiền tự động duyệt trong <strong class="text-emerald-400">10 giây đến 1 phút</strong>.</li>
+                                <li>Vui lòng ghi <strong class="text-cyan-400">chính xác nội dung chuyển khoản</strong> để hệ thống cộng tiền tự động.</li>
+                                <li>Nếu chuyển sai nội dung hoặc quá 5 phút chưa cộng tiền, liên hệ ngay Zalo Admin góc dưới bên phải.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CỬA HÀNG TỔNG HỢP: ACC / FILE / LINK / TOOL -->
+                <section id="tab-sanpham" class="tab-content hidden space-y-5">
+                    <div class="flex flex-wrap justify-between items-center gap-3">
+                        <div><h1 class="text-2xl font-black text-cyan-300">CHỢ ACC GAME • FILE • LINK • TOOL</h1>
+                        <p class="text-xs text-slate-400 mt-1">Danh mục mẫu để bạn thay bằng sản phẩm và kho hàng thực tế.</p></div>
+                        <button onclick="openAuth()" class="btn-pink-gradient rounded-xl px-4 py-2 text-xs font-bold"><i class="fa-solid fa-user mr-1"></i> Đăng nhập / Đăng ký</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <input id="product-search" oninput="renderProducts()" placeholder="Tìm tên sản phẩm..." class="bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm">
+                        <select id="product-category" onchange="renderProducts()" class="bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm"><option value="all">Tất cả danh mục</option><option value="acc">Acc game</option><option value="file">File tải về</option><option value="link">Link tài nguyên</option><option value="tool">Tool / tiện ích</option></select>
+                        <select id="product-status" onchange="renderProducts()" class="bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm"><option value="all">Tất cả trạng thái</option><option value="available">Còn hàng</option><option value="soldout">Hết hàng</option><option value="maintenance">Bảo trì</option></select>
+                        <select id="product-sort" onchange="renderProducts()" class="bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm"><option value="default">Sắp xếp mặc định</option><option value="low">Giá thấp đến cao</option><option value="high">Giá cao đến thấp</option></select>
+                    </div>
+                    <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                    <div class="flex justify-center items-center gap-4"><button onclick="changeProductPage(-1)" class="px-4 py-2 rounded-lg bg-slate-800">Trang trước</button><span id="product-page-label" class="text-sm text-slate-300">1 / 1</span><button onclick="changeProductPage(1)" class="px-4 py-2 rounded-lg bg-slate-800">Trang sau</button></div>
+                    <p class="text-xs text-amber-300 bg-amber-950/30 border border-amber-900 p-3 rounded-lg">Lưu ý: sản phẩm đang là dữ liệu minh họa. Chưa có giao dịch thật, kho acc/file, cấp quyền tải hoặc xác thực thanh toán.</p>
+                </section>
+
+                <section id="tab-donhang" class="tab-content hidden space-y-4">
+                    <h1 class="text-2xl font-black text-cyan-300">ĐƠN HÀNG & LỊCH SỬ GIAO DỊCH</h1>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-cyan-300 text-left"><th class="p-2">Mã đơn</th><th class="p-2">Sản phẩm</th><th class="p-2">Thành tiền</th><th class="p-2">Trạng thái</th><th class="p-2">Ngày tạo</th></tr></thead><tbody id="order-table"><tr><td colspan="5" class="p-6 text-center text-slate-500">Chưa có đơn hàng. Đơn mẫu sẽ xuất hiện tại đây sau khi bạn thử đặt hàng.</td></tr></tbody></table></div>
+                    <h2 class="font-bold text-lg text-emerald-300">Lịch sử nạp / giao dịch</h2><div id="transaction-list" class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-400">Chưa có giao dịch.</div>
+                </section>
+
+                <section id="tab-hoso" class="tab-content hidden space-y-4">
+                    <h1 class="text-2xl font-black text-cyan-300">HỒ SƠ KHÁCH HÀNG</h1>
+                    <div class="max-w-xl bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center gap-3"><div class="w-14 h-14 rounded-full bg-cyan-900 flex items-center justify-center text-xl"> <i class="fa-solid fa-user"></i></div><div><div id="profile-name" class="font-bold text-white">Khách chưa đăng nhập</div><div id="profile-state" class="text-xs text-amber-300">Phiên xem thử</div></div></div>
+                        <label class="block text-xs text-slate-400">Tên hiển thị</label><input id="profile-display" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3" placeholder="Tên của bạn">
+                        <label class="block text-xs text-slate-400">Email liên hệ</label><input id="profile-email" type="email" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3" placeholder="email@example.com">
+                        <button onclick="saveProfile()" class="btn-cyan-gradient rounded-lg px-4 py-3 text-sm font-bold">Lưu thông tin trên trình duyệt</button>
+                        <button onclick="openAuth()" class="block text-cyan-300 text-sm underline">Đăng nhập / Đăng ký</button>
+                    </div>
+                </section>
+
+                <section id="tab-chinhsach" class="tab-content hidden space-y-4">
+                    <h1 class="text-2xl font-black text-cyan-300">CHÍNH SÁCH & ĐIỀU KHOẢN</h1>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <article class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h2 class="font-bold text-emerald-300 mb-2">Chính sách bảo hành</h2><p class="text-sm text-slate-300">Ghi rõ thời hạn bảo hành theo từng sản phẩm, điều kiện tiếp nhận, bằng chứng cần cung cấp và thời gian xử lý. Không cam kết “100%” nếu chưa có căn cứ.</p></article>
+                        <article class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h2 class="font-bold text-emerald-300 mb-2">Chính sách hoàn tiền</h2><p class="text-sm text-slate-300">Nêu rõ trường hợp được hoàn, cách tính số tiền, thời gian hoàn và kênh liên hệ. Không tự động ghi đã hoàn tiền nếu chưa có giao dịch đối soát.</p></article>
+                        <article class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h2 class="font-bold text-emerald-300 mb-2">Điều khoản sử dụng</h2><p class="text-sm text-slate-300">Khách hàng cần kiểm tra mô tả, cấu hình tương thích và quyền sử dụng sản phẩm. Chỉ kinh doanh tài khoản, tệp và công cụ mà bạn có quyền phân phối; tuân thủ điều khoản của nhà phát hành game.</p></article>
+                        <article class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h2 class="font-bold text-emerald-300 mb-2">Chính sách bảo mật</h2><p class="text-sm text-slate-300">Chỉ thu thập dữ liệu cần thiết, không yêu cầu khách gửi mật khẩu game nếu không thực sự cần. Mật khẩu đăng nhập phải được xử lý bằng hệ thống xác thực an toàn, không lưu dạng văn bản thuần.</p></article>
+                    </div>
+                    <p class="text-xs text-amber-300">Các nội dung trên là khung mẫu. Bạn cần điền thông tin pháp lý, thời hạn bảo hành, đầu mối hỗ trợ và quy trình thực tế trước khi mở bán.</p>
+                </section>
+
+                <!-- TAB 7: TIỆN ÍCH KHÁC -->
+                <div id="tab-tienich" class="tab-content hidden space-y-6">
+                    <h1 class="text-2xl font-black text-purple-400 flex items-center">
+                        <i class="fa-solid fa-screwdriver-wrench mr-3"></i> ỨNG DỤNG TIỆN ÍCH NRO
+                    </h1>
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400">
+                        Hệ thống đang tích hợp bộ lọc đồ sao, tính dame đệ tử và auto đổi thỏi vàng...
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MARQUEE BOTTOM LIVE TICKER -->
+            <div class="bg-slate-950 border-t border-slate-800 h-9 flex items-center overflow-hidden relative text-xs">
+                <div class="whitespace-nowrap px-4 text-slate-400">Thông báo: khu vực giao dịch sẽ hiển thị dữ liệu thật sau khi kết nối cơ sở dữ liệu và cổng thanh toán.</div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- FLOATING ZALO ADMIN BUTTON -->
+    <a href="https://zalo.me" target="_blank" class="fixed bottom-12 right-6 z-50 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-full p-1.5 shadow-2xl flex items-center space-x-2 border-2 border-cyan-300 hover:scale-105 transition">
+        <div class="bg-white rounded-full p-2 text-blue-600">
+            <i class="fa-solid fa-comment-dots text-lg"></i>
+        </div>
+        <div class="pr-3 text-left">
+            <div class="text-[9px] uppercase tracking-wider font-extrabold text-cyan-100">ZALO ADMIN</div>
+            <div class="text-xs font-black">0911 756 001</div>
+        </div>
+    </a>
+
+    <div id="auth-modal" class="fixed inset-0 z-[70] hidden bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+      <div class="w-full max-w-md rounded-2xl border border-cyan-800 bg-slate-900 p-6 space-y-4">
+        <div class="flex justify-between"><h3 class="font-black text-cyan-300">TÀI KHOẢN KHÁCH HÀNG</h3><button onclick="closeAuth()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="grid grid-cols-2 gap-2"><button id="auth-login-tab" onclick="setAuthMode('login')" class="rounded-lg bg-cyan-700 p-2">Đăng nhập</button><button id="auth-register-tab" onclick="setAuthMode('register')" class="rounded-lg bg-slate-800 p-2">Đăng ký</button></div>
+        <input id="auth-username" class="w-full rounded-lg border border-slate-700 bg-slate-950 p-3" placeholder="Tên đăng nhập hoặc email">
+        <input id="auth-password" type="password" class="w-full rounded-lg border border-slate-700 bg-slate-950 p-3" placeholder="Mật khẩu">
+        <button onclick="demoAuthSubmit()" class="btn-pink-gradient w-full rounded-lg p-3 font-bold">Tiếp tục</button>
+        <p class="text-xs text-amber-300">Đây chỉ là bản xem trước giao diện. Không nhập mật khẩu thật: đăng nhập hiện chưa kết nối máy chủ và không xác thực tài khoản.</p>
+      </div>
+    </div>
+\n    <!-- PURCHASE MODAL -->
+    <div id="modal-buy" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 id="modal-title" class="font-extrabold text-cyan-400 text-base">MUA KEY TOOL</h3>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div class="flex justify-between text-slate-300">
+                    <span>Gói đã chọn:</span>
+                    <strong id="modal-pkg" class="text-white">---</strong>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                    <span>Giá thanh toán:</span>
+                    <strong id="modal-price" class="text-yellow-400 font-bold">0đ</strong>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl text-slate-400">
+                    Số dư hiện tại: <strong class="text-white">0đ</strong>. Bạn cần nạp thêm tiền để mua gói này.
+                </div>
+            </div>
+
+            <div class="flex space-x-3 pt-2">
+                <button onclick="closeModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 rounded-xl">HỦY</button>
+                <button onclick="switchTab('naptien'); closeModal();" class="flex-1 btn-pink-gradient text-white text-xs font-bold py-2.5 rounded-xl">NẠP TIỀN NGAY</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('nav-active'));
+
+            const activeTab = document.getElementById('tab-' + tabId);
+            if(activeTab) activeTab.classList.remove('hidden');
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            if(activeNav) activeNav.classList.add('nav-active');
+        }
+
+        // Account Live Calculator
+        function updateAccPrice(inputId, pricePerUnit, totalId) {
+            const qty = parseInt(document.getElementById(inputId).value) || 0;
+            const total = qty * pricePerUnit;
+            document.getElementById(totalId).innerText = total.toLocaleString('vi-VN') + 'đ';
+        }
+
+        // Buy Modal Trigger
+        function showBuyModal(title, price) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-pkg').innerText = title;
+            document.getElementById('modal-price').innerText = price;
+            document.getElementById('modal-buy').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-buy').classList.add('hidden');
+        }
+
+        function buyAcc(name, inputId, pricePerUnit) {
+            const qty = document.getElementById(inputId).value;
+            showBuyModal(name + ' (x' + qty + ')', (qty * pricePerUnit).toLocaleString('vi-VN') + 'đ');
+        }
+
+        // Check Band Simulator
+        function startCheckBand() {
+            const input = document.getElementById('checkband-input').value.trim();
+            if(!input) {
+                alert('Vui lòng nhập danh sách tài khoản Ngọc Rồng!');
+                return;
+            }
+
+            const lines = input.split('\n');
+            const boxSong = document.getElementById('box-song');
+            const boxBand = document.getElementById('box-band');
+            
+            boxSong.innerHTML = '';
+            boxBand.innerHTML = '';
+
+            let songCount = 0;
+            let bandCount = 0;
+
+            lines.forEach((line, idx) => {
+                const acc = line.trim();
+                if(!acc) return;
+
+                if(idx % 2 === 0) {
+                    songCount++;
+                    boxSong.innerHTML += `<div><i class="fa-solid fa-check text-emerald-400 mr-1"></i> ${acc} — <span class="text-cyan-400">SM: 120 Tỷ (SV1)</span></div>`;
+                } else {
+                    bandCount++;
+                    boxBand.innerHTML += `<div><i class="fa-solid fa-xmark text-rose-400 mr-1"></i> ${acc} — <span class="text-rose-400">Bị Khoá 365 Ngày / Sai Pass</span></div>`;
+                }
+            });
+
+            document.getElementById('count-song').innerText = songCount;
+            document.getElementById('count-band').innerText = bandCount;
+        }
+
+        // File Upload Handler
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('checkband-input').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Up De Price Calculator
+        function calculateUpDePrice() {
+            const curr = document.getElementById('sm-current').value;
+            const target = document.getElementById('sm-target').value;
+            let price = 250000;
+            
+            if(curr === '2') price -= 50000;
+            if(curr === '3') price -= 100000;
+
+            document.getElementById('calculated-price').innerText = price.toLocaleString('vi-VN') + 'đ';
+        }
+
+        function submitOrder() {
+            alert('Số dư không đủ! Vui lòng nạp tiền vào tài khoản.');
+            switchTab('naptien');
+        }
+
+        // Mobile navigation
+        function toggleMobileMenu(force) {
+            const side = document.getElementById('sidebar');
+            const back = document.getElementById('sidebar-backdrop');
+            const open = typeof force === 'boolean' ? force : !side.classList.contains('mobile-open');
+            side.classList.toggle('mobile-open', open);
+            back.classList.toggle('show', open);
+        }
+        const shopProducts = [
+          {id:'ACC-001',name:'ACC Ngọc Rồng LV12',cat:'acc',price:15000,status:'available',desc:'Tài khoản game mẫu; thông tin bàn giao sau khi xác nhận đơn.'},
+          {id:'ACC-002',name:'ACC Ngọc Rồng MXT',cat:'acc',price:30000,status:'soldout',desc:'Sản phẩm đang hết kho.'},
+          {id:'FILE-001',name:'Bộ tài liệu hướng dẫn game (PDF)',cat:'file',price:10000,status:'available',desc:'File số; chỉ cấp liên kết tải sau khi thanh toán được xác nhận.'},
+          {id:'LINK-001',name:'Gói link tài nguyên game',cat:'link',price:5000,status:'maintenance',desc:'Đang kiểm tra và cập nhật liên kết.'},
+          {id:'TOOL-001',name:'Tool tiện ích NRO',cat:'tool',price:50000,status:'available',desc:'Mô tả, phiên bản và yêu cầu tương thích cần được xác nhận.'},
+          {id:'FILE-002',name:'Gói file cấu hình',cat:'file',price:20000,status:'available',desc:'Tệp tải mẫu; không chứa mã độc hoặc nội dung trái phép.'}
+        ];
+        let productPage = 1;
+        const perPage = 6;
+        function money(v){return Number(v).toLocaleString('vi-VN')+'đ';}
+        function renderProducts(){
+          const q=(document.getElementById('product-search')?.value||'').toLowerCase();
+          const cat=document.getElementById('product-category')?.value||'all';
+          const st=document.getElementById('product-status')?.value||'all';
+          const sort=document.getElementById('product-sort')?.value||'default';
+          let rows=shopProducts.filter(p=>(cat==='all'||p.cat===cat)&&(st==='all'||p.status===st)&&(p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));
+          if(sort==='low') rows.sort((a,b)=>a.price-b.price);
+          if(sort==='high') rows.sort((a,b)=>b.price-a.price);
+          const pages=Math.max(1,Math.ceil(rows.length/perPage)); productPage=Math.min(productPage,pages);
+          const pageRows=rows.slice((productPage-1)*perPage,productPage*perPage);
+          const labels={available:'CÒN HÀNG',soldout:'HẾT HÀNG',maintenance:'BẢO TRÌ'};
+          const colors={available:'text-emerald-300',soldout:'text-rose-300',maintenance:'text-amber-300'};
+          document.getElementById('product-grid').innerHTML=pageRows.map(p=>`<article class="card-cyber rounded-xl p-5 space-y-3"><div class="flex justify-between gap-2"><span class="text-xs uppercase text-cyan-300 font-bold">${p.cat==='acc'?'ACC GAME':p.cat==='file'?'FILE SỐ':p.cat==='link'?'LINK TÀI NGUYÊN':'TOOL GAME'}</span><b class="text-xs ${colors[p.status]}">${labels[p.status]}</b></div><h3 class="font-black text-white">${escapeHtml(p.name)}</h3><p class="text-xs text-slate-400">${escapeHtml(p.desc)}</p><div class="flex justify-between items-center"><strong class="text-yellow-300">${money(p.price)}</strong><button ${p.status!=='available'?'disabled':''} onclick="createDemoOrder('${p.id}')" class="rounded-lg px-4 py-2 text-xs font-bold ${p.status==='available'?'btn-pink-gradient':'bg-slate-700 text-slate-400'}">${p.status==='available'?'ĐẶT MUA':'TẠM NGƯNG'}</button></div></article>`).join('')||'<p class="text-slate-500">Không tìm thấy sản phẩm phù hợp.</p>';
+          document.getElementById('product-page-label').textContent=`${productPage} / ${pages}`;
+        }
+        function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+        function changeProductPage(d){productPage=Math.max(1,productPage+d);renderProducts();}
+        function getDemoOrders(){try{return JSON.parse(localStorage.getItem('modk8_demo_orders')||'[]')}catch(e){return []}}
+        function createDemoOrder(id){
+          const p=shopProducts.find(x=>x.id===id); if(!p||p.status!=='available')return;
+          const orders=getDemoOrders(); orders.unshift({code:'DEMO'+Date.now().toString().slice(-8),name:p.name,price:p.price,status:'Chờ xác nhận (mẫu)',date:new Date().toLocaleString('vi-VN')});
+          localStorage.setItem('modk8_demo_orders',JSON.stringify(orders)); renderOrders(); alert('Đã tạo đơn xem thử trên trình duyệt. Đây chưa phải đơn hàng thật.');
+        }
+        function renderOrders(){
+          const rows=getDemoOrders(); const body=document.getElementById('order-table');
+          if(body)body.innerHTML=rows.length?rows.map(o=>`<tr class="border-t border-slate-800"><td class="p-2">${escapeHtml(o.code)}</td><td class="p-2">${escapeHtml(o.name)}</td><td class="p-2">${money(o.price)}</td><td class="p-2 text-amber-300">${escapeHtml(o.status)}</td><td class="p-2">${escapeHtml(o.date)}</td></tr>`).join(''):'<tr><td colspan="5" class="p-6 text-center text-slate-500">Chưa có đơn hàng.</td></tr>';
+          const tx=document.getElementById('transaction-list'); if(tx)tx.textContent=rows.length?'Có '+rows.length+' đơn thử nghiệm; chưa ghi nhận thanh toán nào.':'Chưa có giao dịch.';
+        }
+        function openAuth(){const m=document.getElementById('auth-modal');m.classList.remove('hidden');m.classList.add('flex');}
+        function closeAuth(){const m=document.getElementById('auth-modal');m.classList.add('hidden');m.classList.remove('flex');}
+        function setAuthMode(mode){document.getElementById('auth-login-tab').className=mode==='login'?'rounded-lg bg-cyan-700 p-2':'rounded-lg bg-slate-800 p-2';document.getElementById('auth-register-tab').className=mode==='register'?'rounded-lg bg-cyan-700 p-2':'rounded-lg bg-slate-800 p-2';}
+        function demoAuthSubmit(){alert('Đăng nhập/đăng ký chưa được kết nối backend. Không nhập mật khẩu thật vào bản demo này.');}
+        function saveProfile(){const profile={name:document.getElementById('profile-display').value,email:document.getElementById('profile-email').value};localStorage.setItem('modk8_demo_profile',JSON.stringify(profile));document.getElementById('profile-name').textContent=profile.name||'Khách chưa đăng nhập';document.getElementById('profile-state').textContent='Thông tin lưu cục bộ trên thiết bị (bản thử nghiệm)';alert('Đã lưu hồ sơ thử nghiệm trên trình duyệt.');}
+        document.addEventListener('DOMContentLoaded',()=>{renderProducts();renderOrders();try{const p=JSON.parse(localStorage.getItem('modk8_demo_profile')||'{}');document.getElementById('profile-display').value=p.name||'';document.getElementById('profile-email').value=p.email||'';if(p.name)document.getElementById('profile-name').textContent=p.name;}catch(e){}});
+    </script>
+</body>
+</html>
